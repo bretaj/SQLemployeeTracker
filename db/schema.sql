@@ -22,8 +22,4 @@ CREATE TABLE employee {
         REFERENCES roles(id)
 };
 
--- CREATE TABLE managers {
---     id: SERIAL PRIMARY KEy,
---     first_name: VARCHAR(30),
---     last_name: VARCHAR(30)
--- }
+
