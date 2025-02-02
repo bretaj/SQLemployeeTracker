@@ -3,7 +3,7 @@ CREATE TABLE department {
     dept_name: VARCHAR(30)
 };
 
-CREATE TABLE role {
+CREATE TABLE roles {
     id: SERIAL PRIMARY KEY,
     title: VARCHAR(30) UNIQUE NOT NULL,
     salary: DECIMAL NOT NULL,
@@ -17,6 +17,15 @@ CREATE TABLE employee {
     first_name: VARCHAR(3) NOT NULL,
     last_name: VARCHAR(30) NOT NULL,
     role_id: INTEGER NOT NULL,
-    manager_id: INTEGER
+    manager_id: INTEGER,
+    FOREIGN KEY (roles)
+        REFERENCES roles(id)
+    FOREIGN KEY (managers)
+        REFERENCES managers(id)
 };
 
+CREATE TABLE managers {
+    id: SERIAL PRIMARY KEy,
+    first_name: VARCHAR(30),
+    last_name: VARCHAR(30)
+}
