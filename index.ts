@@ -2,6 +2,8 @@ import inquirer from 'inquirer';
 import fs from 'fs';
 import { Client } from 'pg';
 
+// todo: add inquirer.prompt code somewhere in this area????
+
 function mainMenu(): void {
     const questions: QuestionCollection = [
         {
