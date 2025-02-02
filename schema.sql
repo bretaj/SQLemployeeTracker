@@ -20,12 +20,10 @@ CREATE TABLE employee {
     manager_id: INTEGER,
     FOREIGN KEY (roles)
         REFERENCES roles(id)
-    FOREIGN KEY (managers)
-        REFERENCES managers(id)
 };
 
-CREATE TABLE managers {
-    id: SERIAL PRIMARY KEy,
-    first_name: VARCHAR(30),
-    last_name: VARCHAR(30)
-}
+-- CREATE TABLE managers {
+--     id: SERIAL PRIMARY KEy,
+--     first_name: VARCHAR(30),
+--     last_name: VARCHAR(30)
+-- }
