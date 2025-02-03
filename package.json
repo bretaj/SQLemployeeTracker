@@ -1,12 +1,12 @@
 {
   "dependencies": {
+    "inquirer": "^12.4.1",
     "pg": "^8.13.1"
   },
   "name": "sqlemployeetracker",
   "version": "1.0.0",
   "description": "uses node.js, PostgreSQL, and Inquirer to create an CLI employee tracker",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
