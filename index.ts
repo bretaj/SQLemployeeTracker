@@ -91,3 +91,26 @@ function updateEmployee(): void {
         }
     ]
 }
+
+
+// async function viewDepartment() {
+//     try {
+//     const { rows } = await pool.query('SELECT * FROM department ORDER BY id ASC');
+//     console.table(rows);
+//     mainMenu();
+//     } catch (error) {
+//     console.error('Error retrieving departments:', error);
+//     mainMenu();
+//     }
+// }
+
+// async function viewEmployee() {
+    //     try {
+    //     const { rows } = await pool.query('SELECT * FROM employee ORDER BY id ASC');
+    //     console.table(rows);
+    //     mainMenu();
+    //     } catch (error) {
+    //     console.error('Error retrieving departments:', error);
+    //     mainMenu();
+    //     }
+    // }
