@@ -1,2 +1,2 @@
--- for copy & paste reference
+-- for copy & paste references
 SELECT * FROM department 
