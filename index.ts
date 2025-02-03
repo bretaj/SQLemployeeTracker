@@ -1,6 +1,5 @@
 import inquirer from 'inquirer';
-import fs from 'fs';
-import { Client } from 'pg';
+import { pool, connectToDb } from './connection.ts';
 
 // todo: add inquirer.prompt code somewhere in this area????
 
