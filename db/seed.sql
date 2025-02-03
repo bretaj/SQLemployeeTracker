@@ -14,12 +14,12 @@ INSERT INTO roles (id, title, salary, department_id)
     (3, 'marketing specialist', 65000, 2),
     (4, 'marketing lead', 75000, 2),
     (5, 'support rep', 60000, 3),
-    (6, 'support Lead', 65000, 3),
-    (7, 'HR Generalist', 75000, 4),
-    (8, 'HR Lead', 80000, 4),
+    (6, 'support lead', 65000, 3),
+    (7, 'HR generalist', 75000, 4),
+    (8, 'HR lead', 80000, 4),
     (9, 'lawyer', 100000, 5),
-    (10, 'IT Specialist', 105000, 6),
-    (11, 'IT Lead', 115000, 6);
+    (10, 'IT specialist', 105000, 6),
+    (11, 'IT lead', 115000, 6);
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
     VALUES

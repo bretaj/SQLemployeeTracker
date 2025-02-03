@@ -1,3 +1,11 @@
+-- concerns for office hours/tutoring:
+-- making sure everything is referenced on the right files
+-- correct/necessary dependencies in package.json files
+-- errors on index file
+-- am i on the right track with the type of code i'm using?
+-- hint on how to complete bonus ?
+
+
 DROP DATABASE IF EXISTS employees_db;
 CREATE DATABASE employees_db;
 

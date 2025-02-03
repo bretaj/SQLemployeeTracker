@@ -48,7 +48,7 @@ import { pool, connectToDb } from './connection.ts';
         }
     });
 
-
+// code to view depts, roles, employees
 async function viewDepartments(): void {
     try {
         const res = await pool.query('SELECT * FROM departments');
@@ -80,6 +80,7 @@ async function viewEmployees(): void {
     }
 }
 
+// adding functions to update db
 function addDepartment() {
     inquirer.prompt([
         {
