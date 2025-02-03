@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import { pool, connectToDb } from './connection.ts';
 
-    const questions: () = [
+    const questions: any[] = [
         {
             type: 'list',
             name: 'choices',
@@ -43,7 +43,7 @@ import { pool, connectToDb } from './connection.ts';
                 updateEmployeeRole();
                 break;
             case 'Exit':
-                db.end(); 
+                pool.end(); 
                 break;
         }
     });
@@ -78,4 +78,27 @@ async function viewEmployees(): void {
     } catch (err) {
         console.error('error retrieving employees:', err);
     }
+}
+
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'dept_name',
+            message: 'what is the name of the new department?',
+
+        }
+    ])
+    .then((answers) => {
+        const { dept_name } = answers;
+        const query = 'INSERT INTO department (name) VALUES ($1) RETURNING *';
+        const values = [dept_name];
+        pool.query (query, values)
+            .then((result) => {
+                console.log(`department '${result.rows[0].name}' added successfully`);
+            })
+            .catch((error) => {
+                console.error('error adding department:', error);
+            });
+    });
 }
