@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "inquirer": "^12.4.1",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "dotenv": "^10.0.0"
   },
   "name": "sqlemployeetracker",
   "version": "1.0.0",
