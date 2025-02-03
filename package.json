@@ -1,5 +1,24 @@
 {
   "dependencies": {
     "pg": "^8.13.1"
-  }
+  },
+  "name": "sqlemployeetracker",
+  "version": "1.0.0",
+  "description": "uses node.js, PostgreSQL, and Inquirer to create an CLI employee tracker",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bretaj/SQLemployeeTracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bretaj/SQLemployeeTracker/issues"
+  },
+  "homepage": "https://github.com/bretaj/SQLemployeeTracker#readme"
 }
