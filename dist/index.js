@@ -15,6 +15,7 @@ const questions = [
             'Add an employee',
             'Update an employee role',
             'View department salaries',
+            'View all employees in a department',
             'Exit'
         ]
     }
@@ -45,6 +46,9 @@ function mainmenu() {
                 break;
             case 'View department salaries':
                 viewDeptSalaries();
+                break;
+            case 'View employees in a department':
+                viewEmployeesByDept();
                 break;
             case 'Exit':
                 pool.end();
@@ -273,7 +277,6 @@ async function updateEmployeeRole() {
 }
 //TODO: add bonus questions. See query.sql file for potential usable queries
 // function to view all salaries within a selected department
-// TODO: update query so department name is visisble, and not just id
 async function viewDeptSalaries() {
     const departmentData = await pool.query('SELECT * FROM department');
     let departmentList = departmentData.rows.map(({ id, dept_name }) => ({
@@ -297,6 +300,41 @@ async function viewDeptSalaries() {
     const totalSalary = salaryData.rows[0].dept_salary || 0;
     const departmentName = salaryData.rows[0]?.department_name || 'unknown department';
     console.log(`the total salary for ${departmentName} is: $${totalSalary}`);
+    mainmenu();
+}
+// function to show employees in a selected department
+// TODO: figure out why list of departments is not showing up
+async function viewEmployeesByDept() {
+    const departmentData = await pool.query('SELECT * FROM department');
+    let departmentList = departmentData.rows.map(({ id, dept_name }) => ({
+        name: dept_name,
+        value: id
+    }));
+    const { department_id } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'department_id',
+            message: 'Choose a department to view its employees',
+            choices: departmentList
+        }
+    ]);
+    const employeeData = await pool.query(`
+        SELECT CONCAT(e.first_name, ' ', e.last_name) AS employee_name, 
+        d.dept_name AS department_name 
+        FROM employee e 
+        JOIN roles r ON e.role_id = r.id 
+        JOIN department d ON r.department_id = d.id 
+        WHERE d.id = $1
+        ORDER BY d.dept_name, e.last_name;`, [department_id]);
+    if (employeeData.rows.length === 0) {
+        console.log('There are no employees in this department.');
+    }
+    else {
+        console.log(`Employees in the selected department:`);
+        employeeData.rows.forEach(({ employee_name }) => {
+            console.log(employee_name);
+        });
+    }
     mainmenu();
 }
 mainmenu();

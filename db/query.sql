@@ -2,11 +2,15 @@
 
 -- SQL query to get all salaries for a dept. 
 -- TODO: figure out how to make department_id a variable
-SELECT d.dept_name AS department_name, SUM(r.salary) AS dept_salary
-        FROM roles r
-        JOIN department d ON r.department_id = d.id
-        WHERE r.department_id = $1
-        GROUP BY d.dept_name
+SELECT 
+    d.dept_name AS department_name, 
+    SUM(r.salary) AS dept_salary
+FROM 
+    roles r
+JOIN department d 
+    ON r.department_id = d.id
+WHERE r.department_id = $1
+GROUP BY d.dept_name
 
 
 -- SQL query to show all employees in a department
