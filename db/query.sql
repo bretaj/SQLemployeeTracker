@@ -4,7 +4,7 @@
 -- TODO: figure out how to make department_id a variable
 SELECT SUM(salary) AS dept_salary 
     FROM roles 
-        WHERE department_id = 2;
+        WHERE department_id = $1;
 
 
 -- SQL query to show all employees in a department
@@ -16,6 +16,8 @@ SELECT CONCAT (e.first_name, ' ', e.last_name) AS employee_name,
                 ON e.role_id = r.id 
                     JOIN department d 
                         ON r.department_id = d.id 
-                            ORDER BY d.dept_name, e.last_name;
+                            ORDER BY d.dept_name, e.last_name
+                                WHERE d.id = $1;
+
 
 

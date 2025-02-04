@@ -18,42 +18,47 @@ const questions = [
         ]
     }
 ];
-inquirer.prompt(questions).then((response) => {
-    switch (response.choices) {
-        case 'View all departments':
-            viewDepartments();
-            break;
-        case 'View all roles':
-            viewRoles();
-            break;
-        case 'View all employees':
-            viewEmployees();
-            break;
-        case 'Add a department':
-            addDepartment();
-            break;
-        case 'Add a role':
-            addRole();
-            break;
-        // case 'Add an employee':
-        //     addEmployee();
-        //     break;
-        // case 'Update an employee role':
-        //     updateEmployeeRole();
-        //     break;
-        case 'Exit':
-            pool.end();
-            break;
-    }
-});
+function mainmenu() {
+    inquirer.prompt(questions).then((response) => {
+        switch (response.choices) {
+            case 'View all departments':
+                viewDepartments();
+                break;
+            case 'View all roles':
+                viewRoles();
+                break;
+            case 'View all employees':
+                viewEmployees();
+                break;
+            case 'Add a department':
+                addDepartment();
+                break;
+            case 'Add a role':
+                addRole();
+                break;
+            // case 'Add an employee':
+            //     addEmployee();
+            //     break;
+            case 'Update an employee role':
+                updateEmployee();
+                break;
+            case 'Exit':
+                pool.end();
+                process.exit();
+                break;
+        }
+    });
+}
 // code to view depts, roles, employees
 // TODO: re-write query so only id, and name of department is visible?
 async function viewDepartments() {
     try {
         const res = await pool.query('SELECT * FROM department');
-        res.rows.forEach((department) => {
-            console.log(department);
-        });
+        // res.rows.forEach((department) => {
+        //     console.table(department);
+        // });
+        console.table(res.rows);
+        mainmenu();
     }
     catch (err) {
         console.error('error retrieving departments:', err);
@@ -62,9 +67,11 @@ async function viewDepartments() {
 async function viewRoles() {
     try {
         const res = await pool.query('SELECT * FROM roles');
-        res.rows.forEach((roles) => {
-            console.log(roles);
-        });
+        // res.rows.forEach((roles) => {
+        //     console.table(roles);
+        // });
+        console.table(res.rows);
+        mainmenu();
     }
     catch (err) {
         console.error('error retrieving roles:', err);
@@ -74,9 +81,11 @@ async function viewRoles() {
 async function viewEmployees() {
     try {
         const res = await pool.query('SELECT * FROM employee');
-        res.rows.forEach((employee) => {
-            console.log(employee);
-        });
+        // res.rows.forEach((employee) => {
+        //     console.log(employee);
+        // });
+        console.table(res.rows);
+        mainmenu();
     }
     catch (err) {
         console.error('error retrieving employees:', err);
@@ -93,14 +102,16 @@ function addDepartment() {
     ])
         .then((answers) => {
         const { dept_name } = answers;
-        const query = 'INSERT INTO department (name) VALUES ($1) RETURNING *';
+        const query = 'INSERT INTO department (dept_name) VALUES ($1) RETURNING *';
         const values = [dept_name];
         pool.query(query, values)
-            .then((result) => {
-            console.log(`department '${result.rows[0].name}' added successfully`);
+            .then((_result) => {
+            console.log(`department '${dept_name}' added successfully`);
+            mainmenu();
         })
             .catch((error) => {
             console.error('error adding department:', error);
+            mainmenu();
         });
     });
 }
@@ -134,10 +145,31 @@ function addRole() {
         pool.query(query, values)
             .then((result) => {
             console.log(`role '${result.rows[0].title}' added successfully`);
+            mainmenu();
         })
             .catch((error) => {
             console.error('error adding role:', error);
+            mainmenu();
         });
     });
 }
 // for new employee, add: first name, last name, role, and manager
+async function updateEmployee() {
+    const employeeData = await pool.query('SELECT * FROM employee');
+    let employeeList = employeeData.rows.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+    }));
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'employee_id',
+            message: 'choose an employee to update',
+            choices: employeeList
+        }
+    ])
+        .then((res) => {
+        console.log(res);
+    });
+}
+mainmenu();
