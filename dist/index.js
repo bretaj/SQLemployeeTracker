@@ -115,6 +115,7 @@ function addDepartment() {
         });
     });
 }
+// TODO: figure out why getting error after entering department
 function addRole() {
     inquirer.prompt([
         {
@@ -140,7 +141,7 @@ function addRole() {
         .then((answers) => {
         const { title, salary, department } = answers;
         //uses subquery to look for dept_id based on dept_name. not sure if this is the right way
-        const query = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, (SELECT id FROM department WHERE name = $3)) RETURNING *';
+        const query = 'INSERT INTO roles (title, salary, department_id) VALUES ($1, $2, (SELECT id FROM department WHERE dept_name = $3)) RETURNING *';
         const values = [title, salary, department];
         pool.query(query, values)
             .then((result) => {
@@ -190,5 +191,4 @@ async function updateEmployeeRole() {
     console.log(`updated employee's role successfully`);
     mainmenu();
 }
-// TODO: add return to main menu function
 mainmenu();
