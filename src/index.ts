@@ -158,7 +158,9 @@ function addRole() {
 }
 // TODO: for new employee, add: first name, last name, role, and manager
 function addEmployee() {
-    Promise.all([
+    // grabs roles & managers so user can choose which role & manager a new employee has
+    // TODO: figure out how to select managers only instead of all employees. Will likely need to adjust schema & seed files
+    Promise.all([ 
         pool.query('SELECT id, title FROM roles'),
         pool.query('SELECT id, CONCAT(first_name, \' \', last_name) AS name FROM employee')
     ])
