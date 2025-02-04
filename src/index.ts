@@ -182,16 +182,19 @@ function addEmployee() {
     ])
     .then((answers) => {
         const { first_name, last_name, role, manager } = answers;
-        const query = 'INSERT INTO employee (first_name, last_name, role, manager) VALUES ($1, $2, (SELECT id FROM department WHERE dept_name = $3)) RETURNING *';
+        const query = `
+            INSERT INTO employee (first_name, last_name, role, manager) 
+            VALUES ($1, $2, $3, (SELECT id FROM employee WHERE CONCAT(first_name, ' ', last_name) = $4)) 
+            RETURNING *`;
         const values = [first_name, last_name, role, manager];
 
         pool.query(query, values)
             .then((result) => {
-                console.log(`role '${result.rows[0].title}' added successfully`);
+                console.log(`Employee '${result.rows[0].first_name} ${result.rows[0].last_name}' added successfully with role '${result.rows[0].role}'`);
             mainmenu(); 
             })
             .catch((error) => {
-                console.error('error adding role:', error);
+                console.error('error adding employee:', error);
             mainmenu();
             });
     });
