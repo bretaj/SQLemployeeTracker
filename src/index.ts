@@ -18,6 +18,9 @@ const questions: any[] = [
             'Update an employee role',
             'View department salaries',
             'View all employees in a department',
+            'Delete role',
+            'Delete employee',
+            'Delete department',
             'Exit'
         ]
     }
@@ -52,6 +55,15 @@ inquirer.prompt(questions).then((response) => {
         case 'View employees in a department':
             viewEmployeesByDept();
             break;
+        case 'Delete employee':
+            deleteEemployee();
+            break;
+        case 'Delete role':
+            deleteRole();
+            break;
+        case 'Delete department':
+            deleteDepartment();
+            break      
         case 'Exit':
             pool.end();
             process.exit();
@@ -352,6 +364,65 @@ async function viewEmployeesByDept() {
         }
     mainmenu();
 }
+// function to delete role, department, employee
+async function deleteRole() {
+    const roleData = await pool.query('SELECT * FROM roles');
+    const roleList = roleData.rows.map(({ id, title }) => ({
+        name: title,
+        value: id
+    }));
+    const { role_id } = await inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'role_id',
+            message: 'choose a role to delete',
+            choices: roleList
+        }
+    ]);
+    await pool.query('DELETE FROM roles WHERE id = $1', [role_id]);
+    console.log('role deleted successfully');
 
+    mainmenu();
+}
+// function to delete department
+// TODO: figure out bug as to why department cannot be deleted
+async function deleteDepartment() {
+    const departmentData = await pool.query('SELECT * FROM department');
+    const departmentList = departmentData.rows.map(({ id, dept_name }) => ({
+        name: dept_name,
+        value: id
+    }));
+    const { department_id } = await inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'department_id',
+            message: 'choose a department to delete',
+            choices: departmentList
+        }
+    ]);
+    await pool.query('DELETE FROM department WHERE id = $1', [department_id]);
+    console.log('department deleted successfully');
 
+    mainmenu();
+}
+// function to delete employee
+async function deleteEemployee() {
+    const employeeData = await pool.query('SELECT * FROM employee');
+    const employeeList = employeeData.rows.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+    }));
+    const { employee_id } = await inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'employee_id',
+            message: 'choose a department to delete',
+            choices: employeeList
+        }
+    ]);
+    await pool.query('DELETE FROM employee WHERE id = $1', [employee_id]);
+    console.log('employee deleted successfully');
+
+    mainmenu();
+}
 mainmenu()
