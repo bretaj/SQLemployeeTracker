@@ -2,6 +2,7 @@
 -- making sure everything is referenced on the right files
 -- correct/necessary dependencies in package.json files
 -- errors on index file
+-- issues running schema file?
 -- am i on the right track with the type of code i'm using?
 -- hint on how to complete bonus ?
 
