@@ -1,14 +1,14 @@
 -- for copy & paste references
 
 -- SQL query to get all salarys for a dept. 
--- not sure how to make selection a variable
+-- TODO: figure out how to make department_id a variable
 SELECT SUM(salary) AS dept_salary 
     FROM roles 
         WHERE department_id = 2;
 
 
--- SQL query to show all employees by a department
--- haven't figured out how to select each dept individually
+-- SQL query to show all employees in a department
+-- TODO: figure out how to select individual departments
 SELECT CONCAT (e.first_name, ' ', e.last_name) AS employee_name, 
     d.dept_name AS department_name 
         FROM employee e 

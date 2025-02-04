@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { pool, connectToDb } from './connection.ts';
+import { pool, connectToDb } from './connection.js';
 
 await connectToDb();
 
@@ -38,12 +38,12 @@ inquirer.prompt(questions).then((response) => {
         case 'Add a role':
             addRole();
             break;
-        case 'Add an employee':
-            addEmployee();
-            break;
-        case 'Update an employee role':
-            updateEmployeeRole();
-            break;
+        // case 'Add an employee':
+        //     addEmployee();
+        //     break;
+        // case 'Update an employee role':
+        //     updateEmployeeRole();
+        //     break;
         case 'Exit':
             pool.end();
             break;
@@ -51,10 +51,10 @@ inquirer.prompt(questions).then((response) => {
 });
 
 // code to view depts, roles, employees
-// should i re-write query so only id, and name of department is visible?
-async function viewDepartments(): void {
+// TODO: re-write query so only id, and name of department is visible?
+async function viewDepartments(): Promise<void> {
     try {
-        const res = await pool.query('SELECT * FROM departments');
+        const res = await pool.query('SELECT * FROM department');
         res.rows.forEach((department) => {
             console.log(department);
         });
@@ -62,7 +62,7 @@ async function viewDepartments(): void {
         console.error('error retrieving departments:', err);
     }
 }
-async function viewRoles(): void {
+async function viewRoles(): Promise<void> {
     try {
         const res = await pool.query('SELECT * FROM roles');
         res.rows.forEach((roles) => {
@@ -73,7 +73,7 @@ async function viewRoles(): void {
     }
 }
 // rewrite query to make displayed table neater?
-async function viewEmployees(): void {
+async function viewEmployees(): Promise<void> {
     try {
         const res = await pool.query('SELECT * FROM employee');
         res.rows.forEach((employee) => {
