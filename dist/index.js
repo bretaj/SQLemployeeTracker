@@ -193,12 +193,12 @@ function addEmployee() {
         const query = `
             INSERT INTO employee (first_name, last_name, role_id, manager_id) 
             VALUES ($1, $2, $3, $4) 
-            RETURNING *`;
+            RETURNING *, (SELECT title FROM roles WHERE id = $3) AS role_title `;
         const values = [first_name, last_name, role, manager];
         return pool.query(query, values);
     })
         .then((result) => {
-        console.log(`Employee '${result.rows[0].first_name} ${result.rows[0].last_name}' added successfully with role '${result.rows[0].roles}'`);
+        console.log(`Employee '${result.rows[0].first_name} ${result.rows[0].last_name}' added successfully with role '${result.rows[0].role_title}'`);
         mainmenu();
     })
         .catch((error) => {
