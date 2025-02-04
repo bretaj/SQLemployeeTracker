@@ -16,6 +16,7 @@ const questions: any[] = [
             'Add a role',
             'Add an employee',
             'Update an employee role',
+            'View department salaries',
             'Exit'
         ]
     }
@@ -44,6 +45,9 @@ inquirer.prompt(questions).then((response) => {
         case 'Update an employee role':
             updateEmployeeRole();
             break;
+        case 'View department salaries':
+            viewDeptSalaries();
+            break;
         case 'Exit':
             pool.end();
             process.exit();
@@ -52,7 +56,7 @@ inquirer.prompt(questions).then((response) => {
 });
 }
 // code to view depts, roles, employees
-// TODO: re-write query so only id, and name of department is visible?
+
 async function viewDepartments(): Promise<void> {
     try {
         const res = await pool.query('SELECT * FROM department');
@@ -279,5 +283,34 @@ async function updateEmployeeRole(){
 
 //TODO: add bonus questions. See query.sql file for potential usable queries
 
+// function to view all salaries within a selected department
+// TODO: update query so department name is visisble, and not just id
+async function viewDeptSalaries() {
+    const departmentData = await pool.query('SELECT * FROM department');
+    let departmentList = departmentData.rows.map (({ id, dept_name }) => ({
+        name: dept_name,
+        value: id
+    }));
+    const { department_id } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'department_id',
+            message: 'choose a department to view total salary',
+            choices: departmentList
+        }
+    ])
+    const salaryData = await pool.query (`
+        SELECT d.dept_name AS department_name, SUM(r.salary) AS dept_salary
+        FROM roles r
+        JOIN department d ON r.department_id = d.id
+        WHERE r.department_id = $1
+        GROUP BY d.dept_name`,
+        [department_id]
+    );
+    const totalSalary = salaryData.rows[0].dept_salary || 0;
+    const departmentName = salaryData.rows[0]?.department_name || 'unknown department';
+    console.log(`the total salary for ${departmentName} is: $${totalSalary}`);
+    mainmenu();
+}
 
 mainmenu()
