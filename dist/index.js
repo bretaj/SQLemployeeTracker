@@ -40,7 +40,7 @@ function mainmenu() {
             //     addEmployee();
             //     break;
             case 'Update an employee role':
-                updateEmployee();
+                updateEmployeeRole();
                 break;
             case 'Exit':
                 pool.end();
@@ -153,23 +153,42 @@ function addRole() {
         });
     });
 }
-// for new employee, add: first name, last name, role, and manager
-async function updateEmployee() {
+// TODO: for new employee, add: first name, last name, role, and manager
+async function updateEmployeeRole() {
     const employeeData = await pool.query('SELECT * FROM employee');
     let employeeList = employeeData.rows.map(({ id, first_name, last_name }) => ({
         name: `${first_name} ${last_name}`,
         value: id
     }));
-    inquirer.prompt([
+    const { employee_id } = await inquirer.prompt([
         {
             type: 'list',
             name: 'employee_id',
             message: 'choose an employee to update',
             choices: employeeList
         }
-    ])
-        .then((res) => {
-        console.log(res);
-    });
+    ]);
+    // .then((res) => {
+    //     console.log(res)
+    // })
+    // TODO: finish code for role ... can use this as a template
+    // TODO: figure out why employee list and roles list are appearing at same time, making an employee unable to be selected
+    const roleData = await pool.query('SELECT * FROM roles');
+    let roleList = roleData.rows.map(({ id, title }) => ({
+        name: title,
+        value: id
+    }));
+    const { new_role_id } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'new_role_id',
+            message: 'choose a new role for the employee',
+            choices: roleList
+        }
+    ]);
+    await pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [new_role_id, employee_id]);
+    console.log(`updated employee's role successfully`);
+    mainmenu();
 }
+// TODO: add return to main menu function
 mainmenu();
