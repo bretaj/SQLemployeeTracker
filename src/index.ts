@@ -91,7 +91,6 @@ async function viewEmployees(): Promise<void> {
     }
 }
 
-// adding functions to update db
 function addDepartment() {
     inquirer.prompt([
         {
@@ -117,7 +116,7 @@ function addDepartment() {
                 
         });
 }
-// TODO: figure out why getting error after entering department
+
 function addRole() {
     inquirer.prompt([
         {
@@ -157,8 +156,46 @@ function addRole() {
             });
     });
 }
-
 // TODO: for new employee, add: first name, last name, role, and manager
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first_name',
+            message: 'enter the first name of the new employee',    
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: 'enter the last_name of the new employee',
+        },
+        {
+            type: 'input',
+            name: 'role',
+            message: 'enter the role for the new employee',
+        },
+        {
+            type: 'input',
+            name: 'manager',
+            message: 'enter the manager for the new employee',
+        }
+    ])
+    .then((answers) => {
+        const { first_name, last_name, role, manager } = answers;
+        const query = 'INSERT INTO employee (first_name, last_name, role, manager) VALUES ($1, $2, (SELECT id FROM department WHERE dept_name = $3)) RETURNING *';
+        const values = [first_name, last_name, role, manager];
+
+        pool.query(query, values)
+            .then((result) => {
+                console.log(`role '${result.rows[0].title}' added successfully`);
+            mainmenu(); 
+            })
+            .catch((error) => {
+                console.error('error adding role:', error);
+            mainmenu();
+            });
+    });
+}
 
 async function updateEmployeeRole(){
     const employeeData = await pool.query('SELECT * FROM employee');
@@ -197,6 +234,7 @@ async function updateEmployeeRole(){
     mainmenu()
 }
 
+//TODO: add bonus questions. See query.sql file for potential usable queries
 
 
 mainmenu()
