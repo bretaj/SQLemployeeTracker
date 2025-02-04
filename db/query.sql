@@ -19,5 +19,30 @@ SELECT CONCAT (e.first_name, ' ', e.last_name) AS employee_name,
                             ORDER BY d.dept_name, e.last_name
                                 WHERE d.id = $1;
 
+-- query for viewEmployees()
+SELECT 
+    employee.id,
+    CONCAT(employee.first_name, ' ', employee.last_name) AS employee_name,
+    roles.salary,
+    department.name AS department_name,
+    CONCAT(manager.first_name, ' ', manager.last_name) AS manager_name
+FROM 
+     employee
+LEFT JOIN 
+    roles ON employee.role_id = roles.id
+LEFT JOIN 
+    department ON roles.department_id = department.id
+LEFT JOIN 
+     employee AS manager ON employee.manager_id = manager.id
 
-
+-- query for viewRoles()
+SELECT
+     roles.id,
+     roles.title,
+     roles.salary,
+     department.dept_name AS department_name
+FROM
+     roles
+LEFT JOIN
+     department 
+        ON roles.department_id = department.id

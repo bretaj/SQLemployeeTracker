@@ -67,7 +67,17 @@ async function viewDepartments(): Promise<void> {
 }
 async function viewRoles(): Promise<void> {
     try {
-        const res = await pool.query('SELECT * FROM roles');
+        const res = await pool.query(`
+            SELECT
+                roles.id,
+                roles.title,
+                roles.salary,
+                department.dept_name AS department_name
+            FROM
+                roles
+            LEFT JOIN
+                department ON roles.department_id = department.id
+            `);
         // res.rows.forEach((roles) => {
         //     console.table(roles);
         // });
@@ -80,7 +90,23 @@ async function viewRoles(): Promise<void> {
 // rewrite query to make displayed table neater?
 async function viewEmployees(): Promise<void> {
     try {
-        const res = await pool.query('SELECT * FROM employee');
+        const res = await pool.query(`
+            SELECT 
+                employee.id,
+                CONCAT (employee.first_name, ' ', employee.last_name) AS employee_name,
+                roles.title AS role,
+                roles.salary,
+                department.dept_name AS department_name,
+                CONCAT (manager.first_name, ' ', manager.last_name) AS manager_name
+            FROM 
+                employee
+            LEFT JOIN 
+                roles ON employee.role_id = roles.id
+            LEFT JOIN 
+                department ON roles.department_id = department.id
+            LEFT JOIN 
+                employee AS manager ON employee.manager_id = manager.id
+        `);
         // res.rows.forEach((employee) => {
         //     console.log(employee);
         // });
