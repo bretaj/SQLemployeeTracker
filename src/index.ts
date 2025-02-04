@@ -38,9 +38,9 @@ inquirer.prompt(questions).then((response) => {
         case 'Add a role':
             addRole();
             break;
-        // case 'Add an employee':
-        //     addEmployee();
-        //     break;
+        case 'Add an employee':
+            addEmployee();
+            break;
         case 'Update an employee role':
             updateEmployeeRole();
             break;
@@ -158,45 +158,58 @@ function addRole() {
 }
 // TODO: for new employee, add: first name, last name, role, and manager
 function addEmployee() {
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'first_name',
-            message: 'enter the first name of the new employee',    
-        },
-        {
-            type: 'input',
-            name: 'last_name',
-            message: 'enter the last_name of the new employee',
-        },
-        {
-            type: 'input',
-            name: 'role',
-            message: 'enter the role for the new employee',
-        },
-        {
-            type: 'input',
-            name: 'manager',
-            message: 'enter the manager for the new employee',
-        }
+    Promise.all([
+        pool.query('SELECT id, title FROM roles'),
+        pool.query('SELECT id, CONCAT(first_name, \' \', last_name) AS name FROM employee')
     ])
+    .then(([rolesResult, managersResult]) => {
+        const roles = rolesResult.rows;
+        const managers = managersResult.rows;
+        const roleChoices = roles.map(role => ({ name: role.title, value: role.id }));
+        const managerChoices = managers.map(manager => ({ name: manager.name, value: manager.id }));
+
+        return inquirer.prompt([
+            {
+                type: 'input',
+                name: 'first_name',
+                message: 'Enter the first name of the new employee',    
+            },
+            {
+                type: 'input',
+                name: 'last_name',
+                message: 'Enter the last name of the new employee',
+            },
+            {
+                type: 'list',
+                name: 'role',
+                message: 'Select the role for the new employee',
+                choices: roleChoices
+            },
+            {
+                type: 'list',
+                name: 'manager',
+                message: 'Select the manager for the new employee',
+                choices: managerChoices
+            }
+        ]);
+    })
     .then((answers) => {
         const { first_name, last_name, role, manager } = answers;
         const query = `
-            INSERT INTO employee (first_name, last_name, role, manager) 
-            VALUES ($1, $2, $3, (SELECT id FROM employee WHERE CONCAT(first_name, ' ', last_name) = $4)) 
+            INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+            VALUES ($1, $2, $3, $4) 
             RETURNING *`;
         const values = [first_name, last_name, role, manager];
-
-        pool.query(query, values)
-            .then((result) => {
-                console.log(`Employee '${result.rows[0].first_name} ${result.rows[0].last_name}' added successfully with role '${result.rows[0].role}'`);
-            mainmenu(); 
-            })
-            .catch((error) => {
-                console.error('error adding employee:', error);
-            mainmenu();
-            });
+        
+        return pool.query(query, values);
+    })
+    .then((result) => {
+        console.log(`Employee '${result.rows[0].first_name} ${result.rows[0].last_name}' added successfully with role '${result.rows[0].roles}'`);
+        mainmenu(); 
+    })
+    .catch((error) => {
+        console.error('Error adding employee:', error);
+        mainmenu();
     });
 }
 
@@ -217,8 +230,7 @@ async function updateEmployeeRole(){
     // .then((res) => {
     //     console.log(res)
     // })
-    // TODO: finish code for role ... can use this as a template
-    // TODO: figure out why employee list and roles list are appearing at same time, making an employee unable to be selected
+    
     const roleData = await pool.query('SELECT * FROM roles');
     let roleList = roleData.rows.map(({ id, title }) => ({
         name: title,
