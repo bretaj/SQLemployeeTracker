@@ -1,8 +1,6 @@
 -- concerns for office hours/tutoring:
 -- making sure everything is referenced on the right files
--- correct/necessary dependencies in package.json files
 -- errors on index file
--- issues running schema file?
 -- am i on the right track with the type of code i'm using?
 -- hint on how to complete bonus ?
 
@@ -28,12 +26,12 @@ CREATE TABLE roles (
 
 CREATE TABLE employee (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(3) NOT NULL,
+    first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
     role_id INTEGER NOT NULL,
     manager_id INTEGER,
     FOREIGN KEY (role_id)
-        REFERENCES roles(id)
+        REFERENCES roles(id),
     FOREIGN KEY (manager_id)
         REFERENCES employee(id)
 );
