@@ -42,7 +42,7 @@ inquirer.prompt(questions).then((response) => {
         //     addEmployee();
         //     break;
         case 'Update an employee role':
-            updateEmployee();
+            updateEmployeeRole();
             break;
         case 'Exit':
             pool.end();
@@ -158,9 +158,9 @@ function addRole() {
     });
 }
 
-// for new employee, add: first name, last name, role, and manager
+// TODO: for new employee, add: first name, last name, role, and manager
 
-async function updateEmployee(){
+async function updateEmployeeRole(){
     const employeeData = await pool.query('SELECT * FROM employee');
     let employeeList = employeeData.rows.map(({id, first_name, last_name}) =>({
         name:`${first_name} ${last_name}`,
@@ -177,7 +177,25 @@ async function updateEmployee(){
     .then((res) => {
         console.log(res)
     })
+    // TODO: finish code for role ... can use this as a template
+    const roleData = await pool.query('SELECT * FROM roles');
+    let roleList = roleData.rows.map(({ id, title }) => ({
+        name: title,
+        value: id
+    }));
+    const { new_role_id } = await inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'new_role_id',
+            message: 'choose a new role for the employee',
+            choices: roleList
+        }
+    ]);
+    await pool.query('UPDATE employee SET role_id = $1 WHERE id = $2', [new_role_id]);
+    console.log(`updated employee's role successfully`);
 }
-// finish code for role ... can use this as a template
-// add return to main menu function
+
+
+
+// TODO: add return to main menu function
 mainmenu()
