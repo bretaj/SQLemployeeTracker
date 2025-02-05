@@ -373,7 +373,7 @@ async function deleteRole() {
 // error: update or delete on table "department" violates foreign key constraint "roles_department_id_fkey" on table "roles"
 // error is saying that cannot delete a department if a role is still open
 // TODO: figure out if you can delete a department even if there is a role dependent on that department
-// is there where ON delete SET null is applicable in the schema?
+// is there where ON delete SET null is applicable in the schema? ON delete CASCADE ?
 async function deleteDepartment() {
     const departmentData = await pool.query('SELECT * FROM department');
     const departmentList = departmentData.rows.map(({ id, dept_name }) => ({
