@@ -202,7 +202,6 @@ function addRole() {
             });
     });
 }
-// TODO: for new employee, add: first name, last name, role, and manager
 function addEmployee() {
     // grabs roles & managers so user can choose which role & manager a new employee has
     // TODO: figure out how to select managers only instead of all employees. Will likely need to adjust schema & seed files
@@ -260,7 +259,7 @@ function addEmployee() {
         mainmenu();
     });
 }
-
+// TODO FOR ALL FUNCTIONS BELOW HERE: add better error handling
 async function updateEmployeeRole(){
     const employeeData = await pool.query('SELECT * FROM employee');
     let employeeList = employeeData.rows.map(({id, first_name, last_name}) =>({
