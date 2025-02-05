@@ -20,7 +20,7 @@ then
 npm start
    
 ## Usage
-to see how to use, please watch this [video]()
+to see how to use, please watch this [video](https://drive.google.com/file/d/1jXIHNaBibgpvQY1ZQDH-DHRDwadb1kkd/view?usp=sharing)
 
 ## Contributing 
 please create your own branch
