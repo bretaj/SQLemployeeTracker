@@ -369,6 +369,8 @@ async function deleteRole() {
     mainmenu();
 }
 // function to delete department
+// TODO: figure out bug as to why department cannot be deleted
+// error: update or delete on table "department" violates foreign key constraint "roles_department_id_fkey" on table "roles"
 async function deleteDepartment() {
     const departmentData = await pool.query('SELECT * FROM department');
     const departmentList = departmentData.rows.map(({ id, dept_name }) => ({
