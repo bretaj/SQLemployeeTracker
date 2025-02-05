@@ -50,7 +50,7 @@ function mainmenu() {
             case 'View department salaries':
                 viewDeptSalaries();
                 break;
-            case 'View employees in a department':
+            case 'View all employees in a department':
                 viewEmployeesByDept();
                 break;
             case 'Delete employee':

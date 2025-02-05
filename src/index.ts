@@ -52,7 +52,7 @@ inquirer.prompt(questions).then((response) => {
         case 'View department salaries':
             viewDeptSalaries();
             break;
-        case 'View employees in a department':
+        case 'View all employees in a department':
             viewEmployeesByDept();
             break;
         case 'Delete employee':
@@ -329,13 +329,13 @@ async function viewDeptSalaries() {
 }
 
 // function to show employees in a selected department
-// TODO: figure out why list of departments is not showing up
 async function viewEmployeesByDept() {
     const departmentData = await pool.query('SELECT * FROM department');
     let departmentList = departmentData.rows.map(({ id, dept_name }) => ({
         name: dept_name,
         value: id
     }));
+    
     const { department_id } = await inquirer.prompt([
         {
             type: 'list',
