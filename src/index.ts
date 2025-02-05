@@ -204,7 +204,7 @@ function addRole() {
 }
 function addEmployee() {
     // grabs roles & managers so user can choose which role & manager a new employee has
-    // TODO: figure out how to select managers only instead of all employees. Will likely need to adjust schema & seed files
+    // TODO: figure out how to select employees that are id'd as managers only instead of all employees. Will likely need to adjust schema & seed files
     Promise.all([ 
         pool.query('SELECT id, title FROM roles'),
         pool.query('SELECT id, CONCAT(first_name, \' \', last_name) AS name FROM employee')
@@ -295,9 +295,6 @@ async function updateEmployeeRole(){
     console.log(`updated employee's role successfully`);
     mainmenu()
 }
-
-//TODO: add bonus questions. See query.sql file for potential usable queries
-
 // function to view all salaries within a selected department
 async function viewDeptSalaries() {
     const departmentData = await pool.query('SELECT * FROM department');
@@ -364,6 +361,9 @@ async function viewEmployeesByDept() {
     mainmenu();
 }
 // function to delete role
+// still getting error about deleting a role before deleting an employee if employee is dependent on that role
+// thought putting ON DELETE SET null in schema would solve it, but does not
+// TODO: figure out issue stated above ^
 async function deleteRole() {
     const roleData = await pool.query('SELECT * FROM roles');
     const roleList = roleData.rows.map(({ id, title }) => ({
